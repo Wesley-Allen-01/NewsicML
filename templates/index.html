@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>NewsicML</title>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <h1>Music Recommendation System</h1>
+        <h2>NewsicML</h2>
+        <div>
+            <input type="text" id="searchInput" placeholder="Search for a song...">
+            <button onclick="searchSongs()">Search</button>
+        </div>
+        <div id="searchResults"></div>
+        <h3>Playlist</h3>
+        <div id="playlist"></div>
+        <button onclick="getRecommendations()">Get Recommendations</button>
+        <div id="recommendations"></div>
+
+        <script src="/static/script.js"></script>
+    </body>
+</html>
