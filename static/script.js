@@ -103,7 +103,7 @@ function addSongToPlaylist(song) {
     // playlistTable.appendChild(headerRow);
 
     let row = document.createElement('tr');
-    row.id = song.track_id + 'playlist_row';
+    row.id = song.track_id;
 
     let titleCell = document.createElement('td');
     titleCell.textContent = song.track_name;
@@ -147,7 +147,7 @@ function removeSongFromPlaylist(song) {
 
 function getRecommendations() {
     console.log('heyhey');
-    let playlistSongs = Array.from(document.getElementById('playlist').children);
+    let playlistSongs = Array.from(document.getElementById('playlistBody').children);
     let trackIds = playlistSongs.map(song => song.id);
     const recommendationsContainer = document.getElementById('recommendations');
     recommendationsContainer.innerHTML = 'Loading...';

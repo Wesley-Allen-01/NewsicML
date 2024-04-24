@@ -26,8 +26,8 @@ def search():
     query = query.lower()
     title_results = df[(df['track_name'].str.contains(query, na=False))]
     artist_results = df[(df['artist_name'].str.contains(query, na=False))]
-    print(query)
-    print(artist_results)
+    # print(query)
+    # print(artist_results)
     results = pd.concat([title_results, artist_results]).drop_duplicates()
     results = results.sort_values('popularity', ascending=False)
     if results.empty:
@@ -42,12 +42,16 @@ def search():
 @app.route('/recommend', methods=['POST'])
 def recommend():
     playlist = request.json['playlist']
+    print("\n\n\n", playlist, "\n\n\n")
     filtered_songs = df[df['track_id'].isin(playlist)]
     recommendations = get_recommendations(filtered_songs)
     return jsonify(recommendations.to_dict(orient='records'))
 
 
 def get_recommendations(playlist):
+    print("\n\n\n\n")
+    print(playlist)
+    print("\n\n\n\n")
     df = pd.read_csv('data/spotify_data.csv', index_col=0)
     songs_already_in_playlist = df[df['track_id'].isin(playlist['track_id'])]
     df = df.drop(songs_already_in_playlist.index)
