@@ -3,20 +3,52 @@
     <head>
         <meta charset="utf-8">
         <title>NewsicML</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="css/style.css">
     </head>
     <body>
-        <h1>Music Recommendation System</h1>
-        <h2>NewsicML</h2>
-        <div>
-            <input type="text" id="searchInput" placeholder="Search for a song...">
-            <button onclick="searchSongs()">Search</button>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8 mb-4 text-center">                  
+                    <h1>Music Recommendation System</h1>
+                    <h2>NewsicML</h2>
+                <div>
+                <div class="col-md-2"></div>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control mb-2" id="searchInput" placeholder="Search for a song..."> <!-- Added 'mb-2' class for bottom margin -->
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" onclick="searchSongs()">Search</button>
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+            <div id="searchResults"></div>
+            <h3>Playlist</h3>
+            <div class="container" id="playlist">
+                <div class="table">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Song</th>
+                                <th scope="col">Artist</th>
+                                <th scope="col">Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody id="playlistBody"></tbody>
+                    </table>
+            </div>
+            <button onclick="getRecommendations()">Get Recommendations</button>
+            <div id="recommendations"></div>
         </div>
-        <div id="searchResults"></div>
-        <h3>Playlist</h3>
-        <div id="playlist"></div>
-        <button onclick="getRecommendations()">Get Recommendations</button>
-        <div id="recommendations"></div>
+
+        <script src="/static/script.js"></script>
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
         <script src="/static/script.js"></script>
     </body>

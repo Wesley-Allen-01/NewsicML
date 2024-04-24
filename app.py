@@ -11,6 +11,7 @@ app = Flask(__name__)
 
 df = pd.read_csv('data/spotify_data.csv', index_col=0)
 df['track_name'] = df['track_name'].str.lower()
+df['artist_name'] = df['artist_name'].str.lower()
 
 @app.route("/")
 def index():
@@ -23,7 +24,12 @@ def search():
     if not query:
         return jsonify([])
     query = query.lower()
-    results = df[df['track_name'].str.contains(query, na=False)]
+    title_results = df[(df['track_name'].str.contains(query, na=False))]
+    artist_results = df[(df['artist_name'].str.contains(query, na=False))]
+    print(query)
+    print(artist_results)
+    results = pd.concat([title_results, artist_results]).drop_duplicates()
+    results = results.sort_values('popularity', ascending=False)
     if results.empty:
         return jsonify([])
     if len(results) > 10:
