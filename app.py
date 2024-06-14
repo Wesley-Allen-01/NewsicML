@@ -12,6 +12,15 @@ app = Flask(__name__)
 df = pd.read_csv('data/spotify_data.csv', index_col=0)
 df['track_name'] = df['track_name'].str.lower()
 df['artist_name'] = df['artist_name'].str.lower()
+scaler = StandardScaler()
+numeric_cols = df.select_dtypes(include=[np.number]).columns
+scaled_data = scaler.fit_transform(df[numeric_cols])
+
+km = KMeans(n_clusters=10, random_state=42)
+km.fit(scaled_data)
+df['cluster'] = km.labels_
+print("Clustering done")
+
 
 @app.route("/")
 def index():
@@ -45,28 +54,34 @@ def recommend():
     print("\n\n\n", playlist, "\n\n\n")
     filtered_songs = df[df['track_id'].isin(playlist)]
     recommendations = get_recommendations(filtered_songs)
-    return jsonify(recommendations.to_dict(orient='records'))
+    returnval = df.iloc[recommendations.index]
+    print(returnval)
+    return jsonify(returnval.to_dict(orient='records'))
 
 
 def get_recommendations(playlist):
     print("\n\n\n\n")
     print(playlist)
     print("\n\n\n\n")
-    df = pd.read_csv('data/spotify_data.csv', index_col=0)
+    # df = pd.read_csv('data/spotify_data.csv', index_col=0)
     songs_already_in_playlist = df[df['track_id'].isin(playlist['track_id'])]
-    df = df.drop(songs_already_in_playlist.index)
-    numeric_cols = df.select_dtypes(include=[np.number]).columns
-    scaler = StandardScaler()
-    scaled_data = scaler.fit_transform(df[numeric_cols])
-    kmeans = KMeans(n_clusters=10, random_state=42)
-    clusters = kmeans.fit_predict(scaled_data)
-    df['cluster'] = clusters
     
-    playlist_vector = create_playlist_vector(playlist, scaler, kmeans)
+    songs_not_in_playlist = df.drop(songs_already_in_playlist.index, axis=0)
+    numeric_cols = songs_not_in_playlist.select_dtypes(include=[np.number]).columns
     
-    songs_in_cluster = df[df['cluster'] == playlist_vector[-1]]
+    data = songs_not_in_playlist[numeric_cols]
+    # scaler = StandardScaler()
+    # scaled_data = scaler.fit_transform(songs_not_in_playlist[numeric_cols])
+    # kmeans = KMeans(n_clusters=10, random_state=42)
+    # clusters = kmeans.fit_predict(scaled_data)
+    # df['cluster'] = clusters
+    
+    playlist_vector = create_playlist_vector(songs_already_in_playlist, scaler, km)
+
+    songs_in_cluster = data[data['cluster'] == playlist_vector[-1]]
     songs_in_cluster = songs_in_cluster.drop('cluster', axis=1)
     numerical_songs = songs_in_cluster.select_dtypes(include=[np.number])
+    # numerical_songs = numerical_songs.drop(columns='cluster')
     scaled_songs = scaler.transform(numerical_songs)
     
     similarities = cosine_similarity([playlist_vector[:-1]], scaled_songs)
@@ -81,6 +96,7 @@ def get_recommendations(playlist):
 
 def create_playlist_vector(playlist, scaler, kmeans):
     numerical_playlist = playlist.select_dtypes(include=[np.number])
+    numerical_playlist = numerical_playlist.drop(columns='cluster')
     scaled_playlist = scaler.transform(numerical_playlist)
     playlist_vector = scaled_playlist.mean(axis=0)
     playlist_cluster = kmeans.predict([playlist_vector])[0]
