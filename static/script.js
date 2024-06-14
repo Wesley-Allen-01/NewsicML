@@ -12,7 +12,7 @@ function searchSongs() {
 
 function displaySearchResults(results) {
     const resultsContainer = document.getElementById('searchResults');
-    resultsContainer.innerHTML = ''; // Clear previous results
+    resultsContainer.innerHTML = ''; 
 
     if (results.length === 0) {
         resultsContainer.innerHTML = 'No results found';
@@ -38,10 +38,10 @@ function displaySearchResults(results) {
     headerRow.appendChild(addToPlaylistHeader);
     table.appendChild(headerRow);
 
-    // Create table body
+
     let tbody = document.createElement('tbody');
 
-    // Loop through each search result and create a table row for each
+
     results.forEach(song => {
         let row = document.createElement('tr');
         row.id = song.track_id + 'search_row';
@@ -57,7 +57,7 @@ function displaySearchResults(results) {
         let addToPlaylistCell = document.createElement('td');
         let addButton = document.createElement('button');
         addButton.textContent = 'Add to playlist';
-        addButton.classList.add('btn', 'btn-primary'); // Add Bootstrap button classes
+        addButton.classList.add('btn', 'btn-primary'); 
         addButton.onclick = () => addSongToPlaylist(song);
 
         addButton.disabled = isInPlaylist;
@@ -85,22 +85,6 @@ function addSongToPlaylist(song) {
         alert('This song is already in the playlist!');
         return; 
     }
-
-    // let playlistTable = document.createElement('table');
-    // playlistTable.classList.add('table');
-    // let headerRow = document.createElement('tr');
-    // let titleHeader = document.createElement('th');
-    // let artistHeader = document.createElement('th');
-    // let removeHeader = document.createElement('th');
-
-    // titleHeader.textContent = 'Title';
-    // artistHeader.textContent = 'Artist';
-    // removeHeader.textContent = 'Remove';
-
-    // headerRow.appendChild(titleHeader);
-    // headerRow.appendChild(artistHeader);
-    // headerRow.appendChild(removeHeader);
-    // playlistTable.appendChild(headerRow);
 
     let row = document.createElement('tr');
     row.id = song.track_id;
